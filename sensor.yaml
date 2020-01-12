@@ -1,0 +1,5 @@
+- platform: template
+    sensors:
+      bath_timer:
+        value_template: "00:{{ states.input_number.timer_minutes.state | round}}:00"
+        friendly_name: 'Timer Bagno'

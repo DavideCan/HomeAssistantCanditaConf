@@ -1,1 +1,72 @@
-[]
+- id: '1577394615145'
+  alias: Spegni stufetta
+  description: ''
+  trigger:
+  - event_data:
+      entity_id: timer.bath_timer
+    event_type: timer.finished
+    platform: event
+  condition: []
+  action:
+  - device_id: d4737e895b7446c2a10cacf524b85ac0
+    domain: switch
+    entity_id: switch.sonoff_s26_plug
+    type: turn_off
+  - entity_id: climate.bagno
+    service: climate.turn_off
+- id: '1577402957009'
+  alias: Avvia timer al cambiare dei minuti
+  description: ''
+  trigger:
+  - entity_id: input_number.timer_minutes
+    platform: state
+  condition: []
+  action:
+  - alias: ''
+    data: {}
+    service: script.start_bath_timer
+- id: '1578001528755'
+  alias: Spegni termostato bagno
+  description: ''
+  trigger:
+  - entity_id: binary_sensor.sonoff_s26_plug_button1
+    from: 'off'
+    platform: state
+    to: 'on'
+  condition:
+  - condition: state
+    entity_id: climate.bagno
+    state: heat
+  action:
+  - entity_id: climate.bagno
+    service: climate.turn_off
+- id: '1578001779378'
+  alias: Spegni termosifoni
+  description: Spegni termostato termosifoni quando spegni da bottone
+  trigger:
+  - entity_id: binary_sensor.nodemcu_button1
+    platform: state
+    to: 'on'
+  condition:
+  - condition: state
+    entity_id: climate.termostato
+    state: heat
+  action:
+  - alias: ''
+    data: {}
+    entity_id: climate.termostato
+    service: climate.turn_off
+- id: '1578001897042'
+  alias: Accendi termosifoni
+  description: Accendi termostato termosifoni quando accendi da bottone
+  trigger:
+  - entity_id: binary_sensor.nodemcu_button1
+    platform: state
+    to: 'on'
+  condition:
+  - condition: state
+    entity_id: climate.termostato
+    state: 'off'
+  action:
+  - entity_id: climate.termostato
+    service: climate.turn_on

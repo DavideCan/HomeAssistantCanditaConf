@@ -2,6 +2,65 @@
 # Configure a default setup of Home Assistant (frontend, api, etc)
 default_config:
 
+climate:
+  - platform: generic_thermostat
+    name: Termostato
+    heater: switch.nodemcu
+    target_sensor: sensor.nodemcu_am2301_temperature
+    min_temp: 15
+    max_temp: 30
+    ac_mode: false
+    target_temp: 19
+    cold_tolerance: 0.3
+    hot_tolerance: 0.3
+    min_cycle_duration:
+      seconds: 5
+    initial_hvac_mode: "off"
+    away_temp: 16
+    precision: 0.1
+
+  - platform: generic_thermostat
+    name: Bagno
+    heater: switch.sonoff_s26_plug
+    target_sensor: sensor.sonoff_s26_plug_am2301_temperature
+    min_temp: 15
+    max_temp: 30
+    ac_mode: false
+    target_temp: 19
+    cold_tolerance: 0.3
+    hot_tolerance: 0.3
+    min_cycle_duration:
+      seconds: 5
+    initial_hvac_mode: "off"
+    away_temp: 16
+    precision: 0.1
+
+timer:
+  bath_timer:
+    name: Bagno
+    icon: mdi:timer
+
+input_number:
+  timer_minutes:
+    name: Minuti
+    initial: 0
+    max: 60
+    min: 0
+    step: 1
+    unit_of_measurement: min
+
+input_boolean:
+  bath_timer:
+    initial: off
+    name: Timer Bagno
+
+sensor:
+  - platform: template
+    sensors:
+      bath_timer:
+        value_template: "00:{{ states.input_number.timer_minutes.state | round}}:00"
+        friendly_name: 'Timer Bagno'
+
 # Uncomment this if you are using SSL/TLS, running in Docker container, etc.
 # http:
 #   base_url: example.duckdns.org:8123
@@ -14,3 +73,5 @@ group: !include groups.yaml
 automation: !include automations.yaml
 script: !include scripts.yaml
 scene: !include scenes.yaml
+frontend:
+  themes: !include themes.yaml
